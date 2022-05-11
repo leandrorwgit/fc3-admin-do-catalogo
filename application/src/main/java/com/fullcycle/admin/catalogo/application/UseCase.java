@@ -5,7 +5,7 @@ import com.fullcycle.admin.catalogo.category.Category;
 public class UseCase {
 
     public Category execute() {
-        return new Category();
+        return Category.newCategory("Filme", "Teste", true);
     }
 
 }
