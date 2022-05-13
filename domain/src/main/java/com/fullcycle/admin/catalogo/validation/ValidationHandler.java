@@ -6,7 +6,7 @@ public interface ValidationHandler {
 
     ValidationHandler append(Error anError);
 
-    ValidationHandler append(ValidationHandler anHandler);
+    ValidationHandler append(ValidationHandler aHandler);
 
     ValidationHandler validate(Validation aValidation);
 
@@ -14,6 +14,12 @@ public interface ValidationHandler {
 
     default boolean hasError() {
         return getErrors() != null && !getErrors().isEmpty();
+    }
+
+    default Error firstError() {
+        if (hasError())
+            return getErrors().get(0);
+        return null;
     }
 
     public interface Validation {
