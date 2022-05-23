@@ -1,33 +1,31 @@
 package com.fullcycle.admin.catalogo.application.category.retrieve.get;
 
+import com.fullcycle.admin.catalogo.IntegrationTest;
 import com.fullcycle.admin.catalogo.category.Category;
 import com.fullcycle.admin.catalogo.category.CategoryGateway;
 import com.fullcycle.admin.catalogo.category.CategoryID;
 import com.fullcycle.admin.catalogo.exceptions.DomainException;
+import com.fullcycle.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
+import com.fullcycle.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
-import java.util.Optional;
+import java.util.Arrays;
 
-@ExtendWith(MockitoExtension.class)
-public class GetCategoryByIdUseCaseTest {
+@IntegrationTest
+public class GetCategoryByIdUseCaseIT {
 
-    @InjectMocks
-    private DefaultGetCategoryByIdUseCase useCase;
+    @Autowired
+    private GetCategoryByIdUseCase useCase;
 
-    @Mock
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @SpyBean
     private CategoryGateway categoryGateway;
-
-    @BeforeEach
-    void cleanUp() {
-        Mockito.reset(categoryGateway);
-    }
 
     @Test
     public void givenAValidID_whenCallsGetCategory_shouldReturnCategory() {
@@ -37,15 +35,15 @@ public class GetCategoryByIdUseCaseTest {
         final var aCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
         final var expectedId = aCategory.getId();
 
-        Mockito.when(categoryGateway.findById(Mockito.eq(expectedId))).thenReturn(Optional.of(aCategory.clone()));
+        save(aCategory);
         final var actualCategory = useCase.execute(expectedId.getValue());
 
         Assertions.assertEquals(expectedId, actualCategory.id());
         Assertions.assertEquals(expectedName, actualCategory.name());
         Assertions.assertEquals(expectedDescription, actualCategory.description());
         Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
-        Assertions.assertEquals(aCategory.getCreatedAt(), actualCategory.createdAt());
-        Assertions.assertEquals(aCategory.getUpdatedAt(), actualCategory.updatedAt());
+        Assertions.assertEquals(aCategory.getCreatedAt().toEpochMilli(), actualCategory.createdAt().toEpochMilli());
+        Assertions.assertEquals(aCategory.getUpdatedAt().toEpochMilli(), actualCategory.updatedAt().toEpochMilli());
         Assertions.assertEquals(aCategory.getDeletedAt(), actualCategory.deletedAt());
     }
 
@@ -55,7 +53,6 @@ public class GetCategoryByIdUseCaseTest {
         final var expectedErrorCount = 1;
         final var expectedId = CategoryID.from("123");
 
-        Mockito.when(categoryGateway.findById(Mockito.eq(expectedId))).thenReturn(Optional.empty());
         final var actualException = Assertions.assertThrows(DomainException.class, () -> useCase.execute(expectedId.getValue()));
 
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
@@ -67,9 +64,14 @@ public class GetCategoryByIdUseCaseTest {
         final var expectedErrorMessage = "Gateway error";
         final var expectedId = CategoryID.from("123");
 
-        Mockito.when(categoryGateway.findById(Mockito.eq(expectedId))).thenThrow(new IllegalStateException(expectedErrorMessage));
+        Mockito.doThrow(new IllegalStateException(expectedErrorMessage)).when(categoryGateway).findById(Mockito.eq(expectedId));
         final var actualException = Assertions.assertThrows(IllegalStateException.class, () -> useCase.execute(expectedId.getValue()));
 
         Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
     }
+
+    private void save(final Category... aCategory) {
+        categoryRepository.saveAllAndFlush(Arrays.stream(aCategory).map(CategoryJpaEntity::from).toList());
+    }
+
 }

@@ -1,6 +1,5 @@
 package com.fullcycle.admin.catalogo.application.category.retrieve.list;
 
-import com.fullcycle.admin.catalogo.application.category.retrieve.get.CategoryOutput;
 import com.fullcycle.admin.catalogo.category.Category;
 import com.fullcycle.admin.catalogo.category.CategoryID;
 

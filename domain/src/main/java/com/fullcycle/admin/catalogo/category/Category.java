@@ -5,7 +5,6 @@ import com.fullcycle.admin.catalogo.validation.ValidationHandler;
 
 import java.time.Instant;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Category extends AggregateRoot<CategoryID> implements Cloneable {
 

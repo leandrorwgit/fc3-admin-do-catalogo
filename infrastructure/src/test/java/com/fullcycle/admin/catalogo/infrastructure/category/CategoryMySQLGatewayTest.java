@@ -1,11 +1,11 @@
 package com.fullcycle.admin.catalogo.infrastructure.category;
 
+import com.fullcycle.admin.catalogo.MySQLGatewayTest;
 import com.fullcycle.admin.catalogo.category.Category;
 import com.fullcycle.admin.catalogo.category.CategoryID;
 import com.fullcycle.admin.catalogo.category.CategorySearchQuery;
 import com.fullcycle.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
 import com.fullcycle.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
-import com.fullcycle.admin.catalogo.pagination.Pagination;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

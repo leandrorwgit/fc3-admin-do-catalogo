@@ -2,7 +2,6 @@ package com.fullcycle.admin.catalogo.application.category.retrieve.list;
 
 import com.fullcycle.admin.catalogo.category.Category;
 import com.fullcycle.admin.catalogo.category.CategoryGateway;
-import com.fullcycle.admin.catalogo.category.CategoryID;
 import com.fullcycle.admin.catalogo.category.CategorySearchQuery;
 import com.fullcycle.admin.catalogo.pagination.Pagination;
 import org.junit.jupiter.api.Assertions;
