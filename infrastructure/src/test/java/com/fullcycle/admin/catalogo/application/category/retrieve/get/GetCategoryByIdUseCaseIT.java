@@ -4,7 +4,7 @@ import com.fullcycle.admin.catalogo.IntegrationTest;
 import com.fullcycle.admin.catalogo.category.Category;
 import com.fullcycle.admin.catalogo.category.CategoryGateway;
 import com.fullcycle.admin.catalogo.category.CategoryID;
-import com.fullcycle.admin.catalogo.exceptions.DomainException;
+import com.fullcycle.admin.catalogo.exceptions.NotFoundException;
 import com.fullcycle.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
 import com.fullcycle.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
@@ -50,13 +50,11 @@ public class GetCategoryByIdUseCaseIT {
     @Test
     public void givenAnInvalidID_whenCallsGetCategory_shouldReturnNotFound() {
         final var expectedErrorMessage = "Category with ID 123 was not found";
-        final var expectedErrorCount = 1;
         final var expectedId = CategoryID.from("123");
 
-        final var actualException = Assertions.assertThrows(DomainException.class, () -> useCase.execute(expectedId.getValue()));
+        final var actualException = Assertions.assertThrows(NotFoundException.class, () -> useCase.execute(expectedId.getValue()));
 
-        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
     }
 
     @Test
