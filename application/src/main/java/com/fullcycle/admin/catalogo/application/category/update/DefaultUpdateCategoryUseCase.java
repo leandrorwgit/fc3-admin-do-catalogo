@@ -4,6 +4,7 @@ import com.fullcycle.admin.catalogo.category.Category;
 import com.fullcycle.admin.catalogo.category.CategoryGateway;
 import com.fullcycle.admin.catalogo.category.CategoryID;
 import com.fullcycle.admin.catalogo.exceptions.DomainException;
+import com.fullcycle.admin.catalogo.exceptions.NotFoundException;
 import com.fullcycle.admin.catalogo.validation.Error;
 import com.fullcycle.admin.catalogo.validation.handler.Notification;
 import io.vavr.API;
@@ -37,8 +38,6 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
     }
 
     private Supplier<DomainException> notFound(final CategoryID anId) {
-        return () -> DomainException.with(
-                new Error("Category with ID %s was not found".formatted(anId.getValue()))
-        );
+        return () -> NotFoundException.with(Category.class, anId);
     }
 }

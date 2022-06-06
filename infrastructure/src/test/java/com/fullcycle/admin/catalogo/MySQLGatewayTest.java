@@ -19,7 +19,7 @@ import java.lang.annotation.*;
         //@ComponentScan.Filter(type = FilterType.REGEX, pattern = ".[MySQLGateway]")
         @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Service.class)
 })
-@ExtendWith(CleanUpExtension.class)
+@ExtendWith(MySQLCleanUpExtension.class)
 public @interface MySQLGatewayTest {
 
 }
